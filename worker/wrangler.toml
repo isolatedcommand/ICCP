@@ -32,7 +32,7 @@ bucket_name = "iccp-evidence"
 # Set after creating the Access app (Zero Trust → Access → Applications):
 [vars]
 ACCESS_TEAM_DOMAIN = "https://conanzhangtech.cloudflareaccess.com"
-ACCESS_AUD = "" # paste the Access application AUD tag after creating the app
+ACCESS_AUD = "5ee9c4ca410f890d1d3be6b6634e51fe69aa7ab40629312547cd205c48b44e52"
 # DEV ONLY — uncomment locally to bypass Access:
 # DEV_BYPASS_EMAIL = "dev@isolatedcommand.com"
 
