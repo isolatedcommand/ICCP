@@ -18,7 +18,7 @@ navbar_fixed = true
 
 [[params.navbar_buttons]]
 label = "Docs"
-link = "/docs/"
+link = "https://isolatedcommand.com/our-projects/pid-005-iccp/"
 style = "outline"
 
 [[menu.main]]

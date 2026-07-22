@@ -96,6 +96,12 @@ async function handleApi(request, env, url) {
     if (demo) throw new ApiError(403, "The demo is limited to the demo organisation");
     return orgs.createOrg(env, user, request);
   }
+  // Demo-only: on-demand wipe + reseed of the sandbox (also runs nightly).
+  if (path === "/demo/reset" && request.method === "POST") {
+    if (!demo) throw new ApiError(403, "Reset is only available in the demo");
+    await resetDemo(env);
+    return json({ ok: true });
+  }
 
   const orgMatch = path.match(/^\/orgs\/([^/]+)(\/.*)$/);
   if (!orgMatch) throw new ApiError(404, "Unknown endpoint");

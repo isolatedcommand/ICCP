@@ -87,9 +87,22 @@
     var mount = document.getElementById("iccp-app");
     if (!mount) return;
     if (/^compliance-demo\./.test(location.hostname)) {
-      document.body.insertBefore(el('<div class="iccp-demo-banner">Demo environment — shared sandbox, ' +
-        'resets nightly. <a href="https://compliance.isolatedcommand.com/">Use the real platform →</a></div>'),
-        document.body.firstChild);
+      var banner = el('<div class="iccp-demo-banner">Demo environment — shared sandbox, resets nightly. ' +
+        '<button type="button" class="iccp-demo-reset">Reset demo data</button> ' +
+        '<a href="https://compliance.isolatedcommand.com/">Use the real platform →</a></div>');
+      banner.querySelector(".iccp-demo-reset").addEventListener("click", async function () {
+        var btn = this;
+        if (!confirm("Reset the demo? This wipes everyone's changes and restores the sample data.")) return;
+        btn.disabled = true; btn.textContent = "Resetting…";
+        try {
+          await api("/demo/reset", { method: "POST" });
+          toast("Demo reset — reloading");
+          setTimeout(function () { location.reload(); }, 700);
+        } catch (err) {
+          toast(err.message, true); btn.disabled = false; btn.textContent = "Reset demo data";
+        }
+      });
+      document.body.insertBefore(banner, document.body.firstChild);
     }
     try {
       state.me = await api("/me");
