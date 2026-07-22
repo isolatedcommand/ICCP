@@ -132,9 +132,17 @@ export default {
 
     // Static Publisher front end; SPA-ish fallback to the app shell.
     if (env.ASSETS) {
-      const res = await env.ASSETS.fetch(request);
-      if (res.status !== 404) return res;
-      return env.ASSETS.fetch(new URL("/404.html", url.origin));
+      let res = await env.ASSETS.fetch(request);
+      if (res.status === 404) res = await env.ASSETS.fetch(new URL("/404.html", url.origin));
+      // Never let an HTML shell be edge/browser-cached: it references
+      // fingerprinted assets, and a stale shell shows an empty app after a
+      // deploy. Fingerprinted JS/CSS are immutable and keep their own caching.
+      const ct = res.headers.get("content-type") || "";
+      if (ct.includes("text/html")) {
+        res = new Response(res.body, res);
+        res.headers.set("cache-control", "no-store, must-revalidate");
+      }
+      return res;
     }
     return json({ error: "Assets not configured" }, 500);
   },

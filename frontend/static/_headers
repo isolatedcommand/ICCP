@@ -1,0 +1,9 @@
+# HTML shells are forced to `no-store` by the Worker (run_worker_first, see
+# src/index.js). Here we only mark the fingerprinted, immutable assets as
+# long-cacheable so they are not needlessly re-fetched.
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+/images/*
+  Cache-Control: public, max-age=604800

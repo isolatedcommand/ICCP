@@ -10,10 +10,14 @@ routes = [
 ]
 
 # Static Publisher-themed front end (built into ../frontend/public).
+# run_worker_first: the Worker handles every request so it can force
+# `Cache-Control: no-store` on HTML shells (see src/index.js) — otherwise the
+# asset system edge-caches the shell and a stale copy shows an empty app.
 [assets]
 directory = "../frontend/public"
 binding = "ASSETS"
 not_found_handling = "none"
+run_worker_first = true
 
 # Relational compliance graph. Create with:
 #   npx wrangler d1 create iccp
