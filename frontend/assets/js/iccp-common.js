@@ -12,7 +12,9 @@
       opts.headers = Object.assign({ "content-type": "application/json" }, opts.headers);
       delete opts.json;
     }
-    var res = await fetch(location.origin + "/api/v1" + path, Object.assign({ credentials: "include" }, opts));
+    // Local demo preview: /page/?demo=1 routes API calls to the demo org too.
+    var demoQ = /(?:^|[?&])demo=1(?:&|$)/.test(location.search) ? (path.indexOf("?") < 0 ? "?demo=1" : "&demo=1") : "";
+    var res = await fetch(location.origin + "/api/v1" + path + demoQ, Object.assign({ credentials: "include" }, opts));
     var data = null;
     try { data = await res.json(); } catch (e) { /* file downloads etc. */ }
     if (!res.ok) throw new Error((data && data.error) || ("HTTP " + res.status));
@@ -84,6 +86,11 @@
   async function boot() {
     var mount = document.getElementById("iccp-app");
     if (!mount) return;
+    if (/^compliance-demo\./.test(location.hostname)) {
+      document.body.insertBefore(el('<div class="iccp-demo-banner">Demo environment — shared sandbox, ' +
+        'resets nightly. <a href="https://compliance.isolatedcommand.com/">Use the real platform →</a></div>'),
+        document.body.firstChild);
+    }
     try {
       state.me = await api("/me");
     } catch (err) {

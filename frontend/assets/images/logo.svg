@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 72" width="240" height="72">
-  <rect x="4" y="4" width="64" height="64" rx="16" fill="none" stroke="#FFE14D" stroke-width="4"/>
-  <rect x="4" y="60" width="64" height="8" rx="4" fill="#B39B1F"/>
-  <text x="36" y="46" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-weight="700" font-size="26" fill="#FFE14D">ic</text>
-  <text x="84" y="48" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="34" fill="#FAFAFA">ccp</text>
-</svg>

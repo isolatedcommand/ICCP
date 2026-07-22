@@ -10,6 +10,7 @@
 import { json, ApiError, errorResponse } from "./lib/util.js";
 import { authenticate } from "./access.js";
 import { withOrg, upsertUser, requireMembership } from "./db.js";
+import { isDemoRequest, demoContext, resetDemo, DEMO_ORG_ID } from "./demo.js";
 import * as orgs from "./api/orgs.js";
 import * as compliance from "./api/compliance.js";
 import * as evidence from "./api/evidence.js";
@@ -19,6 +20,7 @@ import { dashboard } from "./api/dashboard.js";
 
 const ORIGINS = [
   "https://compliance.isolatedcommand.com",
+  "https://compliance-demo.isolatedcommand.com",
   "http://localhost:1320", "http://127.0.0.1:1320", "http://localhost:8789",
 ];
 
@@ -77,17 +79,30 @@ const ORG_ROUTES = [
 ];
 
 async function handleApi(request, env, url) {
-  const identity = await authenticate(request, env);
-  const user = await upsertUser(env, identity.email);
+  const demo = isDemoRequest(url, env);
+  let user, demoMembership = null;
+  if (demo) {
+    const d = await demoContext(env);
+    user = d.user;
+    demoMembership = d.membership;
+  } else {
+    const identity = await authenticate(request, env);
+    user = await upsertUser(env, identity.email);
+  }
   const path = url.pathname.replace(/^\/api\/v1/, "");
 
   if (path === "/me" && request.method === "GET") return orgs.me(env, user);
-  if (path === "/orgs" && request.method === "POST") return orgs.createOrg(env, user, request);
+  if (path === "/orgs" && request.method === "POST") {
+    if (demo) throw new ApiError(403, "The demo is limited to the demo organisation");
+    return orgs.createOrg(env, user, request);
+  }
 
   const orgMatch = path.match(/^\/orgs\/([^/]+)(\/.*)$/);
   if (!orgMatch) throw new ApiError(404, "Unknown endpoint");
   const [, orgId, sub] = orgMatch;
-  const membership = await requireMembership(env, user.id, orgId);
+  // Demo sessions are pinned to the demo organisation — nothing else exists.
+  if (demo && orgId !== DEMO_ORG_ID) throw new ApiError(403, "The demo is limited to the demo organisation");
+  const membership = demo ? demoMembership : await requireMembership(env, user.id, orgId);
   const ctx = { env, user, membership, repo: withOrg(env, orgId) };
 
   for (const [method, re, handler] of ORG_ROUTES) {
@@ -124,8 +139,9 @@ export default {
     return json({ error: "Assets not configured" }, 500);
   },
 
-  // Daily: expire stale evidence, flag dependent controls.
+  // Daily: expire stale evidence, flag dependent controls, reset the demo org.
   async scheduled(_event, env, _ctx) {
     await evidence.sweepExpiry(env);
+    await resetDemo(env);
   },
 };

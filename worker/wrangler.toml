@@ -3,7 +3,10 @@ main = "src/index.js"
 compatibility_date = "2026-06-29"
 workers_dev = false
 routes = [
-  { pattern = "compliance.isolatedcommand.com", custom_domain = true }
+  { pattern = "compliance.isolatedcommand.com", custom_domain = true },
+  # Public sandbox — no Access application on this hostname; the Worker pins
+  # these sessions to the demo organisation and resets it nightly.
+  { pattern = "compliance-demo.isolatedcommand.com", custom_domain = true }
 ]
 
 # Static Publisher-themed front end (built into ../frontend/public).

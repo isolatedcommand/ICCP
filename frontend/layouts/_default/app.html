@@ -20,6 +20,8 @@
   </div>
 </section>
 
-<script defer src="{{ "/js/iccp-common.js" | relURL }}"></script>
-<script defer src="{{ "/js/iccp-views.js" | relURL }}"></script>
+{{ $common := resources.Get "js/iccp-common.js" | minify | fingerprint "sha512" }}
+{{ $views := resources.Get "js/iccp-views.js" | minify | fingerprint "sha512" }}
+<script defer src="{{ $common.RelPermalink }}" integrity="{{ $common.Data.Integrity }}"></script>
+<script defer src="{{ $views.RelPermalink }}" integrity="{{ $views.Data.Integrity }}"></script>
 {{ end }}

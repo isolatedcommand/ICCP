@@ -10,8 +10,8 @@ enableRobotsTXT = true
 unsafe = true
 
 [params]
-logo_text = "ICCP"
-logo = "images/logo.svg"
+logo_text = "Compliance"
+logo = ""                       # navbar ::before supplies the "IC" keycap pill
 logo_width = "120px"
 description = "Continuous compliance operating system — frameworks, controls, evidence, risks, policies and audits as one connected graph."
 navbar_fixed = true
@@ -55,6 +55,11 @@ weight = 6
 name = "Audits"
 url = "/audits/"
 weight = 7
+
+[[menu.main]]
+name = "Demo"
+url = "/demo/"
+weight = 8
 
 [[menu.footer]]
 name = "Isolated Command"
