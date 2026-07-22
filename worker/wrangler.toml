@@ -2,6 +2,9 @@ name = "iccp-isolatedcommand-com"
 main = "src/index.js"
 compatibility_date = "2026-06-29"
 workers_dev = false
+routes = [
+  { pattern = "compliance.isolatedcommand.com", custom_domain = true }
+]
 
 # Static Publisher-themed front end (built into ../frontend/public).
 [assets]
@@ -16,7 +19,7 @@ not_found_handling = "none"
 [[d1_databases]]
 binding = "DB"
 database_name = "iccp"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "dc191c17-ed72-4182-916e-7b388c01c496"
 migrations_dir = "migrations"
 
 # Evidence object storage. Create with:
@@ -28,8 +31,8 @@ bucket_name = "iccp-evidence"
 # Cloudflare Access application (protects compliance.isolatedcommand.com).
 # Set after creating the Access app (Zero Trust → Access → Applications):
 [vars]
-ACCESS_TEAM_DOMAIN = "" # e.g. https://<team>.cloudflareaccess.com
-ACCESS_AUD = ""         # the application audience (AUD) tag
+ACCESS_TEAM_DOMAIN = "https://conanzhangtech.cloudflareaccess.com"
+ACCESS_AUD = "" # paste the Access application AUD tag after creating the app
 # DEV ONLY — uncomment locally to bypass Access:
 # DEV_BYPASS_EMAIL = "dev@isolatedcommand.com"
 
