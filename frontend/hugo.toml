@@ -1,4 +1,4 @@
-baseURL = "https://compliance.isolatedcommand.com/"
+baseURL = "/"
 title = "ICCP — Isolated Command Compliance Platform"
 enableRobotsTXT = true
 
