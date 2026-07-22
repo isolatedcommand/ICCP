@@ -1,0 +1,17 @@
+{
+  "name": "iccp-isolatedcommand-com",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ICCP — compliance platform Worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply iccp --local",
+    "migrate:remote": "wrangler d1 migrations apply iccp --remote",
+    "seed:local": "wrangler d1 execute iccp --local --file seed/0100_framework_library.sql",
+    "seed:remote": "wrangler d1 execute iccp --remote --file seed/0100_framework_library.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.112.0"
+  }
+}

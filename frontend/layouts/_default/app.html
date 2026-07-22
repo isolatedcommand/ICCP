@@ -1,0 +1,25 @@
+{{ define "main" }}
+{{/* Generic ICCP app page — the front matter's `view` picks the JS module
+     (dashboard | frameworks | controls | evidence | risks | policies | audits). */}}
+<section class="section-sm iccp-page">
+  <div class="container">
+    <header class="iccp-page-head">
+      <p class="iccp-eyebrow">{{ .Params.eyebrow | default .Title | lower }}</p>
+      <h1 class="iccp-title">{{ .Title }}</h1>
+      {{ with .Params.lede }}<p class="iccp-lede">{{ . }}</p>{{ end }}
+      <div class="iccp-orgbar">
+        <label for="iccp-org">Organisation</label>
+        <select id="iccp-org" aria-label="Organisation"></select>
+        <span id="iccp-user" class="iccp-user"></span>
+      </div>
+    </header>
+
+    <div id="iccp-app" data-view="{{ .Params.view }}">
+      <p class="iccp-loading">Loading…</p>
+    </div>
+  </div>
+</section>
+
+<script defer src="{{ "/js/iccp-common.js" | relURL }}"></script>
+<script defer src="{{ "/js/iccp-views.js" | relURL }}"></script>
+{{ end }}

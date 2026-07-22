@@ -1,0 +1,42 @@
+name = "iccp-isolatedcommand-com"
+main = "src/index.js"
+compatibility_date = "2026-06-29"
+workers_dev = false
+
+# Static Publisher-themed front end (built into ../frontend/public).
+[assets]
+directory = "../frontend/public"
+binding = "ASSETS"
+not_found_handling = "none"
+
+# Relational compliance graph. Create with:
+#   npx wrangler d1 create iccp
+# then paste the id below and run migrations:
+#   npx wrangler d1 migrations apply iccp --remote
+[[d1_databases]]
+binding = "DB"
+database_name = "iccp"
+database_id = "REPLACE_WITH_D1_ID"
+migrations_dir = "migrations"
+
+# Evidence object storage. Create with:
+#   npx wrangler r2 bucket create iccp-evidence
+[[r2_buckets]]
+binding = "EVIDENCE"
+bucket_name = "iccp-evidence"
+
+# Cloudflare Access application (protects compliance.isolatedcommand.com).
+# Set after creating the Access app (Zero Trust → Access → Applications):
+[vars]
+ACCESS_TEAM_DOMAIN = "" # e.g. https://<team>.cloudflareaccess.com
+ACCESS_AUD = ""         # the application audience (AUD) tag
+# DEV ONLY — uncomment locally to bypass Access:
+# DEV_BYPASS_EMAIL = "dev@isolatedcommand.com"
+
+# Daily evidence-expiry sweep (03:00 UTC).
+[triggers]
+crons = ["0 3 * * *"]
+
+# Build the Hugo front end before deploying.
+[build]
+command = "bash ../build.sh"

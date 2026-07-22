@@ -1,0 +1,80 @@
+{{/* compliance.isolatedcommand.com — app styling on Publisher design tokens. */}}
+<style>
+  .iccp-page{padding-top:130px;}
+  .iccp-eyebrow{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:var(--tracking-intel);
+    text-transform:uppercase;color:var(--color-text-muted);}
+  .iccp-eyebrow::before{content:'> ';color:var(--color-accent);}
+  .iccp-title{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);letter-spacing:var(--tracking-display);margin:.2em 0 .3em;}
+  .iccp-lede{color:var(--color-text-muted);max-width:60ch;}
+  .iccp-orgbar{display:flex;align-items:center;gap:.8rem;margin:1.2rem 0 0;font-size:.9rem;}
+  .iccp-orgbar label{color:var(--color-text-muted);font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.14em;}
+  .iccp-orgbar select{background:var(--color-bg-accent);color:var(--color-text-light);border:1px solid var(--border-subtle);
+    border-radius:10px;padding:.45rem .8rem;}
+  .iccp-user{color:var(--color-text-muted);font-family:var(--font-mono);font-size:12px;}
+  #iccp-app{margin-top:2rem;}
+  .iccp-loading,.iccp-muted{color:var(--color-text-muted);}
+  .iccp-empty{border:1px dashed var(--border-strong);border-radius:var(--key-radius-lg);padding:2.4rem;text-align:center;max-width:34rem;margin:2rem auto;}
+
+  /* cards / grids */
+  .iccp-card{background:var(--color-bg-accent);border:1px solid var(--border-subtle);border-radius:var(--key-radius-lg);padding:1.4rem;}
+  .iccp-card h4{margin:0 0 .8rem;}
+  .iccp-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;}
+  .iccp-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin-top:1.6rem;}
+  .iccp-stats{list-style:none;padding:0;margin:0 0 .8rem;}
+  .iccp-stats strong{font-size:1.5rem;font-family:var(--font-display);margin-right:.35em;}
+
+  /* progress rings */
+  .iccp-score-row{display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap;}
+  .iccp-rings{display:flex;gap:1.2rem;flex-wrap:wrap;}
+  .iccp-ring-card{display:block;text-align:center;padding:1rem 1.2rem;border:1px solid var(--border-subtle);
+    border-radius:var(--key-radius-lg);color:var(--color-text-light);}
+  .iccp-ring-card:hover{border-color:var(--color-accent);}
+  .iccp-ring{--pct:0;width:92px;height:92px;border-radius:50%;margin:0 auto .6rem;display:flex;align-items:center;justify-content:center;
+    background:conic-gradient(var(--color-accent) calc(var(--pct)*1%), var(--color-bg-accent) 0);}
+  .iccp-ring span{background:var(--color-bg-dark);width:72px;height:72px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-family:var(--font-mono);font-weight:700;}
+  .iccp-ring-lg{width:140px;height:140px;}
+  .iccp-ring-lg span{width:112px;height:112px;font-size:1.5rem;}
+
+  /* rows / lists */
+  .iccp-list{display:flex;flex-direction:column;gap:.7rem;margin-top:1rem;}
+  .iccp-row{display:grid;grid-template-columns:minmax(70px,auto) 1fr auto auto;gap:1rem;align-items:center;
+    background:var(--color-bg-accent);border:1px solid var(--border-subtle);border-radius:var(--key-radius);padding:.9rem 1.1rem;}
+  .iccp-row .btn{white-space:nowrap;}
+  .iccp-row-actions{display:flex;gap:.5rem;align-items:center;}
+  .iccp-code{font-family:var(--font-mono);font-weight:700;color:var(--color-accent);}
+  .iccp-chip{display:inline-block;font-family:var(--font-mono);font-size:11px;border:1px solid var(--border-subtle);
+    border-radius:999px;padding:.1rem .55rem;margin:.1rem .15rem 0 0;color:var(--color-text-muted);}
+  .iccp-upcoming{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem;font-size:.92rem;}
+
+  /* badges & severity */
+  .iccp-badge{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:.15rem .6rem;
+    background:rgba(255,255,255,.07);color:var(--color-text-muted);text-transform:capitalize;}
+  .iccp-badge.is-approved,.iccp-badge.is-met,.iccp-badge.is-implemented,.iccp-badge.is-verified{background:rgba(123,228,60,.15);color:#7BE43C;}
+  .iccp-badge.is-pending_review,.iccp-badge.is-in_progress,.iccp-badge.is-partially_met,.iccp-badge.is-treating{background:rgba(255,225,77,.15);color:#FFE14D;}
+  .iccp-badge.is-expired,.iccp-badge.is-rejected,.iccp-badge.is-not_met,.iccp-badge.is-attention,.iccp-badge.is-open{background:rgba(255,138,138,.16);color:#ff8a8a;}
+  .iccp-sev{font-family:var(--font-mono);font-weight:700;font-size:.85rem;}
+  .sev-critical{color:#ff8a8a;} .sev-high{color:#FF9E57;} .sev-medium{color:#FFE14D;} .sev-low{color:#7BE43C;}
+
+  /* form modal */
+  .iccp-modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem;}
+  .iccp-modal{background:var(--color-bg-dark);border:1px solid var(--border-strong);border-radius:var(--key-radius-lg);
+    padding:1.8rem;width:100%;max-width:34rem;max-height:88vh;overflow:auto;}
+  .iccp-field{display:block;margin-bottom:1rem;}
+  .iccp-field span{display:block;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:.12em;color:var(--color-text-muted);margin-bottom:.35rem;}
+  .iccp-field input,.iccp-field textarea,.iccp-field select{width:100%;background:var(--color-bg-accent);
+    color:var(--color-text-light);border:1px solid var(--border-subtle);border-radius:10px;padding:.6rem .8rem;font-size:.95rem;}
+  .iccp-field input:focus,.iccp-field textarea:focus,.iccp-field select:focus{outline:0;border-color:var(--color-accent);}
+  .iccp-modal-actions{display:flex;gap:.8rem;margin-top:1.2rem;}
+  .iccp-upload input{display:none;}
+
+  /* toast */
+  .iccp-toast{position:fixed;bottom:1.5rem;left:50%;transform:translate(-50%,20px);opacity:0;transition:all .25s ease;
+    background:var(--color-bg-accent);border:1px solid var(--color-accent);color:var(--color-text-light);
+    border-radius:var(--key-radius);padding:.7rem 1.2rem;z-index:1100;}
+  .iccp-toast.is-error{border-color:#ff8a8a;}
+  .iccp-toast.show{transform:translate(-50%,0);opacity:1;}
+
+  @media (max-width:640px){ .iccp-row{grid-template-columns:1fr;gap:.4rem;} }
+</style>

@@ -1,0 +1,67 @@
+baseURL = "https://compliance.isolatedcommand.com/"
+title = "ICCP — Isolated Command Compliance Platform"
+enableRobotsTXT = true
+
+[module]
+  [[module.imports]]
+    path = "github.com/isolatedcommand/Publisher"
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[params]
+logo_text = "ICCP"
+logo = "images/logo.svg"
+logo_width = "120px"
+description = "Continuous compliance operating system — frameworks, controls, evidence, risks, policies and audits as one connected graph."
+navbar_fixed = true
+
+[[params.navbar_buttons]]
+label = "Docs"
+link = "/docs/"
+style = "outline"
+
+[[menu.main]]
+name = "Dashboard"
+url = "/dashboard/"
+weight = 1
+
+[[menu.main]]
+name = "Frameworks"
+url = "/frameworks/"
+weight = 2
+
+[[menu.main]]
+name = "Controls"
+url = "/controls/"
+weight = 3
+
+[[menu.main]]
+name = "Evidence"
+url = "/evidence/"
+weight = 4
+
+[[menu.main]]
+name = "Risks"
+url = "/risks/"
+weight = 5
+
+[[menu.main]]
+name = "Policies"
+url = "/policies/"
+weight = 6
+
+[[menu.main]]
+name = "Audits"
+url = "/audits/"
+weight = 7
+
+[[menu.footer]]
+name = "Isolated Command"
+url = "https://isolatedcommand.com"
+weight = 1
+
+[[menu.footer]]
+name = "Powered by Cloudflare Workers"
+url = "https://workers.cloudflare.com/"
+weight = 2
