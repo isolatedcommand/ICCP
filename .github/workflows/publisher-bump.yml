@@ -1,0 +1,71 @@
+# Bumps the Publisher theme module when the Publisher repo publishes a tag.
+#
+# Triggered by `repository_dispatch: publisher-release` (sent by Publisher's
+# release workflow) or manually via the Actions tab (workflow_dispatch).
+# Commits the go.mod/go.sum bump; the push triggers the Cloudflare build.
+name: publisher-bump
+
+on:
+  repository_dispatch:
+    types: [publisher-release]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Publisher tag to pin (e.g. v0.14.0); empty = latest"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.163.0"
+          extended: true
+
+      - name: Bump Publisher module
+        run: |
+          # site lives at repo root or under frontend/
+          SITE_DIR="."
+          [ -f go.mod ] || SITE_DIR="frontend"
+          cd "$SITE_DIR"
+
+          VERSION="${{ github.event.client_payload.version || github.event.inputs.version }}"
+          if [ -n "$VERSION" ]; then
+            hugo mod get "github.com/isolatedcommand/Publisher@${VERSION}"
+          else
+            hugo mod get -u github.com/isolatedcommand/Publisher
+          fi
+          hugo mod tidy
+
+      - name: Build check
+        run: |
+          SITE_DIR="."
+          [ -f go.mod ] || SITE_DIR="frontend"
+          cd "$SITE_DIR"
+          [ -f package.json ] && npm install --no-audit --no-fund
+          hugo
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Already up to date."
+            exit 0
+          fi
+          VERSION="${{ github.event.client_payload.version || github.event.inputs.version }}"
+          git commit -m "chore: bump Publisher to ${VERSION:-latest}"
+          git push
